@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sign up | SkinDx Insight</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <div class="brand">
+          <span class="brand__mark">SD</span>
+          <span class="brand__text">SkinDx Insight</span>
+        </div>
+        <nav class="topbar__nav">
+          <span class="pill">Enterprise</span>
+          <span class="pill">Secure</span>
+          <span class="pill">Compliant</span>
+          <a class="nav-link" href="/login">Login</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container auth">
+      <section class="auth__panel">
+        <div class="card">
+          <h2>Create account</h2>
+          <p class="card__desc">Provision access for clinical teams and administrators.</p>
+          <form action="/signup" method="post" class="form">
+            <label class="field">
+              <span>First name</span>
+              <input type="text" name="first_name" required />
+            </label>
+            <label class="field">
+              <span>Last name</span>
+              <input type="text" name="last_name" required />
+            </label>
+            <label class="field">
+              <span>Mobile number</span>
+              <input type="tel" name="phone" required />
+            </label>
+            <label class="field">
+              <span>Email</span>
+              <input type="email" name="email" required />
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input type="password" name="password" required />
+            </label>
+            <label class="field">
+              <span>Confirm password</span>
+              <input type="password" name="confirm_password" required />
+            </label>
+            <button class="btn" type="submit">Create account</button>
+          </form>
+          {% if error %}
+          <div class="alert alert--error">{{ error }}</div>
+          {% endif %}
+          <p class="auth__alt">
+            Already have an account? <a href="/login">Sign in</a>
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

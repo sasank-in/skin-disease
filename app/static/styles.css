@@ -84,6 +84,15 @@ body {
   font-weight: 500;
 }
 
+.nav-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(17, 70, 167, 0.08);
+}
+
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
@@ -253,6 +262,88 @@ body {
 
 .results__note {
   font-size: 12px;
+  color: var(--muted);
+}
+
+.auth {
+  display: grid;
+  place-items: center;
+}
+
+.auth__panel {
+  width: min(520px, 92vw);
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.form select {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  background: #fff;
+}
+
+.auth__alt {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.auth__alt a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.admin {
+  display: grid;
+  gap: 24px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.table th {
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.inline {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--border);
+}
+
+.btn--danger {
+  background: #ffe5e7;
+  color: var(--danger);
+  border: 1px solid #f4b7bc;
+}
+
+.muted {
   color: var(--muted);
 }
 

@@ -40,3 +40,15 @@ pytest -q
 
 ## Notes
 - Tests bypass model load by setting `SKIP_MODEL_LOAD=1` in the test fixture.
+
+## Demo Credentials
+To seed demo users on startup, set:
+```bash
+set SEED_DEMO_USERS=1
+set DEMO_ADMIN_EMAIL=admin@demo.local
+set DEMO_ADMIN_PASSWORD=Admin@12345
+set DEMO_USER_EMAIL=user@demo.local
+set DEMO_USER_PASSWORD=User@12345
+```
+
+Then restart the app and log in with the credentials above.

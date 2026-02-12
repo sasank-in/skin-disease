@@ -18,6 +18,15 @@
           <span class="pill">Secure</span>
           <span class="pill">Compliant</span>
           <span class="pill">Audit Ready</span>
+          {% if user %}
+          {% if user.role == "admin" %}
+          <a class="nav-link" href="/admin">Admin</a>
+          {% endif %}
+          <a class="nav-link" href="/logout">Logout</a>
+          {% else %}
+          <a class="nav-link" href="/login">Login</a>
+          <a class="nav-link" href="/signup">Sign up</a>
+          {% endif %}
         </nav>
       </div>
     </header>
@@ -67,14 +76,17 @@
               Drag and drop a JPG, PNG, or WEBP image or select one from your device.
             </p>
             <label class="upload">
-              <input type="file" name="image" accept="image/*" required />
+              <input type="file" name="image" accept="image/*" {% if not user %}disabled{% endif %} required />
               <span>Choose Image</span>
             </label>
             <label class="field">
               <span>Top predictions</span>
-              <input type="number" name="top_k" min="1" max="10" value="3" />
+              <input type="number" name="top_k" min="1" max="10" value="3" {% if not user %}disabled{% endif %} />
             </label>
-            <button type="submit" class="btn">Analyze Image</button>
+            <button type="submit" class="btn" {% if not user %}disabled{% endif %}>Analyze Image</button>
+            {% if not user %}
+            <p class="results__note">Sign in to enable predictions.</p>
+            {% endif %}
             {% if error %}
             <div class="alert alert--error">{{ error }}</div>
             {% endif %}
@@ -110,6 +122,10 @@
         <div>
           <p class="footline__title">Clinical Use</p>
           <p class="footline__text">Designed for decision support, not standalone diagnosis.</p>
+        </div>
+        <div>
+          <p class="footline__title">Access Control</p>
+          <p class="footline__text">Role-based authentication for administrators and clinicians.</p>
         </div>
       </section>
     </main>
