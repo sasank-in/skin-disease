@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Skin Disease Classifier</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <div class="brand">
+          <span class="brand__mark">SD</span>
+          <span class="brand__text">SkinDx Insight</span>
+        </div>
+        <nav class="topbar__nav">
+          <span class="pill">Enterprise</span>
+          <span class="pill">Secure</span>
+          <span class="pill">Compliant</span>
+          <span class="pill">Audit Ready</span>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div class="hero__content">
+          <p class="eyebrow">Clinical AI Platform</p>
+          <h1>Professional skin screening intelligence for enterprise care teams.</h1>
+          <p class="subhead">
+            Submit a dermal image and receive ranked predictions with confidence scoring,
+            designed for controlled clinical workflows and audit readiness.
+          </p>
+          <div class="trust">
+            <div>
+              <p class="trust__label">Model</p>
+              <p class="trust__value">YOLOv8 Classifier</p>
+            </div>
+            <div>
+              <p class="trust__label">Inference</p>
+              <p class="trust__value">Single Image</p>
+            </div>
+            <div>
+              <p class="trust__label">Deployment</p>
+              <p class="trust__value">On-Prem Ready</p>
+            </div>
+            <div>
+              <p class="trust__label">Security</p>
+              <p class="trust__value">No Cloud Uploads</p>
+            </div>
+          </div>
+          <div class="kpi">
+            <div class="kpi__item">
+              <p>Decision Support</p>
+              <span>Confidence-ranked outputs</span>
+            </div>
+            <div class="kpi__item">
+              <p>Governance</p>
+              <span>Traceable model artifacts</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero__panel">
+          <form class="card" action="/predict" method="post" enctype="multipart/form-data">
+            <h2>Submit Image</h2>
+            <p class="card__desc">
+              Drag and drop a JPG, PNG, or WEBP image or select one from your device.
+            </p>
+            <label class="upload">
+              <input type="file" name="image" accept="image/*" required />
+              <span>Choose Image</span>
+            </label>
+            <label class="field">
+              <span>Top predictions</span>
+              <input type="number" name="top_k" min="1" max="10" value="3" />
+            </label>
+            <button type="submit" class="btn">Analyze Image</button>
+            {% if error %}
+            <div class="alert alert--error">{{ error }}</div>
+            {% endif %}
+          </form>
+
+          {% if result %}
+          <section class="results">
+            <h3>Prediction Results</h3>
+            <ul class="results__list">
+              {% for item in result %}
+              <li>
+                <span class="results__label">{{ item.label }}</span>
+                <span class="results__score">{{ '%.2f' | format(item.confidence * 100) }}%</span>
+              </li>
+              {% endfor %}
+            </ul>
+            <p class="results__note">
+              This output supports preliminary screening and should not replace clinical diagnosis.
+            </p>
+          </section>
+          {% endif %}
+        </div>
+      </section>
+      <section class="footline">
+        <div>
+          <p class="footline__title">Operational Governance</p>
+          <p class="footline__text">Local inference ensures patient data remains within your environment.</p>
+        </div>
+        <div>
+          <p class="footline__title">Audit Trail</p>
+          <p class="footline__text">Model weights are versioned and stored on your infrastructure.</p>
+        </div>
+        <div>
+          <p class="footline__title">Clinical Use</p>
+          <p class="footline__text">Designed for decision support, not standalone diagnosis.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
