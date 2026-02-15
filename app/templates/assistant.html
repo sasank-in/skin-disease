@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Assistant | SkinDx Insight</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <div class="brand">
+          <span class="brand__mark">SD</span>
+          <span class="brand__text">SkinDx Insight</span>
+        </div>
+        <nav class="topbar__nav">
+          <a class="tab" href="/remedy">Remedy Scan</a>
+          <a class="tab tab--active" href="/assistant">Assistant</a>
+          <a class="tab" href="/specialist">Find Specialist</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div class="page-header">
+          <p class="eyebrow">AI Health Assistant</p>
+          <h1>Contextual reasoning for symptoms and next steps.</h1>
+          <p>
+            Describe symptoms naturally to receive possible explanations, seriousness levels,
+            and recommended actions.
+          </p>
+        </div>
+        <div class="hero__panel">
+          <section class="panel-block section-card">
+            <div class="section-head">
+              <span class="section-icon">AI</span>
+              <div>
+                <h2>Describe Symptoms</h2>
+                <p>Tell us what you are noticing for guidance.</p>
+              </div>
+            </div>
+            <form class="card" action="/assistant" method="post">
+              <label class="field">
+                <span>Symptoms</span>
+                <textarea name="symptoms" rows="4" required></textarea>
+              </label>
+              <label class="field">
+                <span>Duration (optional)</span>
+                <input type="text" name="duration" placeholder="e.g., 2 weeks" />
+              </label>
+              <button type="submit" class="btn">Analyze Symptoms</button>
+            </form>
+
+            {% if assistant_result %}
+            <section class="results">
+              <h3>Assistant Insight</h3>
+              {% if assistant_error %}
+              <p class="results__note">{{ assistant_error }}</p>
+              {% endif %}
+              <ul class="results__list">
+                <li>
+                  <span class="results__label">Summary</span>
+                  <span class="results__score">{{ assistant_result.summary }}</span>
+                </li>
+                <li>
+                  <span class="results__label">Seriousness</span>
+                  <span class="results__score">
+                    <span class="badge badge--{{ assistant_result.seriousness | lower }}">{{ assistant_result.seriousness }}</span>
+                  </span>
+                </li>
+                <li>
+                  <span class="results__label">Next steps</span>
+                  <span class="results__score">{{ assistant_result.next_steps }}</span>
+                </li>
+                <li>
+                  <span class="results__label">Red flags</span>
+                  <span class="results__score">{{ assistant_result.red_flags }}</span>
+                </li>
+                <li>
+                  <span class="results__label">Self-care</span>
+                  <span class="results__score">{{ assistant_result.self_care }}</span>
+                </li>
+              </ul>
+            </section>
+            {% endif %}
+
+            {% if assistant_result.follow_up_questions %}
+            <section class="results">
+              <h3>Follow-up Questions</h3>
+              <ul class="results__list">
+                {% for q in assistant_result.follow_up_questions %}
+                <li>
+                  <span class="results__label">Question</span>
+                  <span class="results__score">{{ q }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </section>
+            {% endif %}
+          </section>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

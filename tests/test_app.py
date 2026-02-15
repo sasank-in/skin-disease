@@ -52,8 +52,8 @@ def _make_image_bytes():
 def test_index_ok(_inject_dummy_model):
     client = TestClient(_inject_dummy_model.app)
     res = client.get("/")
-    assert res.status_code == 200
-    assert "SkinDx Insight" in res.text
+    assert res.status_code == 303
+    assert res.headers["location"] == "/remedy"
 
 
 def test_health_ok(_inject_dummy_model):
@@ -73,6 +73,16 @@ def test_predict_ok(_inject_dummy_model):
     assert "Acne" in res.text
 
 
+def test_feedback_saved(_inject_dummy_model):
+    client = TestClient(_inject_dummy_model.app)
+    res = client.post(
+        "/feedback",
+        data={"disease": "Acne", "rating": "4", "comments": "Helpful", "email": "a@b.com"},
+    )
+    assert res.status_code == 200
+    assert "feedback was saved" in res.text.lower()
+
+
 def test_predict_rejects_non_image(_inject_dummy_model):
     client = TestClient(_inject_dummy_model.app)
     files = {"image": ("test.txt", b"not an image", "text/plain")}
@@ -87,3 +97,25 @@ def test_predict_rejects_empty_file(_inject_dummy_model):
     res = client.post("/predict", files=files, data={"top_k": "2"})
     assert res.status_code == 500
     assert "Empty file" in res.text
+
+
+def test_assistant_page_and_post(_inject_dummy_model):
+    client = TestClient(_inject_dummy_model.app)
+    res = client.get("/assistant")
+    assert res.status_code == 200
+    assert "AI Health Assistant" in res.text
+    res = client.post("/assistant", data={"symptoms": "itchy rash", "duration": "2 weeks"})
+    assert res.status_code == 200
+    assert "Assistant Insight" in res.text
+
+
+def test_specialist_page_and_post(_inject_dummy_model):
+    import os
+    os.environ["PRACTO_PROVIDER"] = "stub"
+    client = TestClient(_inject_dummy_model.app)
+    res = client.get("/specialist")
+    assert res.status_code == 200
+    assert "Find Specialist" in res.text
+    res = client.post("/specialist", data={"disease": "Acne", "location": "bangalore"})
+    assert res.status_code == 200
+    assert "Recommended Facilities" in res.text

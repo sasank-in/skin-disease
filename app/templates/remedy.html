@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Remedy Scan | SkinDx Insight</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar__inner">
+        <div class="brand">
+          <span class="brand__mark">SD</span>
+          <span class="brand__text">SkinDx Insight</span>
+        </div>
+        <nav class="topbar__nav">
+          <a class="tab tab--active" href="/remedy">Remedy Scan</a>
+          <a class="tab" href="/assistant">Assistant</a>
+          <a class="tab" href="/specialist">Find Specialist</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div class="page-header">
+          <p class="eyebrow">Remedy Scan</p>
+          <h1>Image-based screening with confidence-ranked predictions.</h1>
+          <p>
+            Upload a skin image to receive ranked predictions and a recommended
+            specialist pathway.
+          </p>
+        </div>
+        <div class="hero__panel">
+          <section class="panel-block section-card">
+            <div class="section-head">
+              <span class="section-icon">RS</span>
+              <div>
+                <h2>Upload Image</h2>
+                <p>Fast classification with confidence scores.</p>
+              </div>
+            </div>
+            <form class="card" action="/predict" method="post" enctype="multipart/form-data">
+              <p class="card__desc">
+                Drag and drop a JPG, PNG, or WEBP image or select one from your device.
+              </p>
+              <label class="upload">
+                <input id="imageInput" type="file" name="image" accept="image/*" required />
+                <span>Choose Image</span>
+              </label>
+              <p class="results__note" id="uploadNotice" style="display:none;"></p>
+              <label class="field">
+                <span>Top predictions</span>
+                <input type="number" name="top_k" min="1" max="10" value="3" />
+              </label>
+              <button type="submit" class="btn">Analyze Image</button>
+              {% if error %}
+              <div class="alert alert--error">{{ error }}</div>
+              {% endif %}
+            </form>
+
+            {% if upload_name %}
+            <p class="results__note">Uploaded file: {{ upload_name }}</p>
+            {% endif %}
+            {% if result %}
+            <section class="results">
+              <h3>Prediction Results</h3>
+              <ul class="results__list">
+                {% for item in result %}
+                <li>
+                  <span class="results__label">{{ item.label }}</span>
+                  <span class="results__score">{{ '%.2f' | format(item.confidence * 100) }}%</span>
+                </li>
+                {% endfor %}
+              </ul>
+              <p class="results__note">
+                This output supports preliminary screening and should not replace clinical diagnosis.
+              </p>
+              {% if primary_disease %}
+              <a class="btn btn--ghost" href="/specialist?disease={{ primary_disease }}">Find Specialist</a>
+              {% endif %}
+            </section>
+            {% endif %}
+          </section>
+
+        </div>
+      </section>
+    </main>
+    <button class="feedback-fab" id="feedbackFab" type="button" aria-label="Open feedback">
+      FB
+    </button>
+    <div class="feedback-panel" id="feedbackPanel" aria-hidden="true">
+      <div class="feedback-panel__header">
+        <div>
+          <p class="feedback-panel__title">Feedback</p>
+          <p class="feedback-panel__subtitle">Help improve accuracy.</p>
+        </div>
+        <button class="feedback-panel__close" id="feedbackClose" type="button" aria-label="Close">
+          ✕
+        </button>
+      </div>
+      <form class="feedback-panel__body" action="/feedback" method="post">
+        <label class="field">
+          <span>Detected disease</span>
+          <input type="text" name="disease" value="{{ primary_disease or '' }}" required />
+        </label>
+        <label class="field">
+          <span>Rating (1-5)</span>
+          <input type="number" name="rating" min="1" max="5" value="5" required />
+        </label>
+        <label class="field">
+          <span>Comments</span>
+          <input type="text" name="comments" />
+        </label>
+        <label class="field">
+          <span>Email (optional)</span>
+          <input type="email" name="email" />
+        </label>
+        <button type="submit" class="btn">Submit Feedback</button>
+        {% if feedback_saved %}
+        <div class="alert alert--success">Thank you. Your feedback was saved.</div>
+        {% endif %}
+      </form>
+    </div>
+    <script>
+      (function () {
+        const fab = document.getElementById("feedbackFab");
+        const panel = document.getElementById("feedbackPanel");
+        const closeBtn = document.getElementById("feedbackClose");
+        function openPanel() {
+          panel.classList.add("is-open");
+          panel.setAttribute("aria-hidden", "false");
+        }
+        function closePanel() {
+          panel.classList.remove("is-open");
+          panel.setAttribute("aria-hidden", "true");
+        }
+        fab.addEventListener("click", openPanel);
+        closeBtn.addEventListener("click", closePanel);
+      })();
+    </script>
+    <script>
+      (function () {
+        const input = document.getElementById("imageInput");
+        const notice = document.getElementById("uploadNotice");
+        if (!input || !notice) return;
+        input.addEventListener("change", function () {
+          const file = input.files && input.files[0];
+          if (file) {
+            notice.textContent = "Selected file: " + file.name;
+            notice.style.display = "block";
+          } else {
+            notice.textContent = "";
+            notice.style.display = "none";
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
