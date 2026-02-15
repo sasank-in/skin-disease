@@ -223,6 +223,11 @@ body {
   color: var(--danger);
 }
 
+.alert--success {
+  background: #e5f7ef;
+  color: var(--success);
+}
+
 .results {
   background: #ffffff;
   border: 1px solid var(--border);

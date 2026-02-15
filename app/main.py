@@ -158,17 +158,15 @@ def signup_post(
     db.add(user)
     db.commit()
     db.refresh(user)
-    token = create_access_token(str(user.id))
-    response = RedirectResponse(url="/", status_code=303)
-    response.set_cookie("access_token", token, httponly=True, samesite="lax")
-    return response
+    return RedirectResponse(url="/login?created=1", status_code=303)
 
 
 @app.get("/login", response_class=HTMLResponse)
 def login_get(request: Request):
+    created = request.query_params.get("created") == "1"
     return TEMPLATES.TemplateResponse(
         "login.html",
-        {"request": request, "error": None},
+        {"request": request, "error": None, "created": created},
     )
 
 

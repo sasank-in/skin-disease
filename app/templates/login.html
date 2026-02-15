@@ -38,6 +38,9 @@
             </label>
             <button class="btn" type="submit">Sign in</button>
           </form>
+          {% if created %}
+          <div class="alert alert--success">Account created. Please sign in.</div>
+          {% endif %}
           {% if error %}
           <div class="alert alert--error">{{ error }}</div>
           {% endif %}

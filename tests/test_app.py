@@ -96,6 +96,14 @@ def test_signup_login_and_predict_ok(_inject_dummy_model):
         allow_redirects=False,
     )
     assert res.status_code == 303
+    assert res.headers["location"] == "/login?created=1"
+
+    res = client.post(
+        "/login",
+        data={"email": "user@example.com", "password": "pass1234"},
+        allow_redirects=False,
+    )
+    assert res.status_code == 303
     assert "access_token" in res.cookies
 
     img_bytes = _make_image_bytes()
