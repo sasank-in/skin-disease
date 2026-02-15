@@ -50,7 +50,7 @@ def _make_image_bytes():
 
 
 def test_index_ok(_inject_dummy_model):
-    client = TestClient(_inject_dummy_model.app)
+    client = TestClient(_inject_dummy_model.app, follow_redirects=False)
     res = client.get("/")
     assert res.status_code == 303
     assert res.headers["location"] == "/remedy"

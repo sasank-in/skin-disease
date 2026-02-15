@@ -6,10 +6,12 @@ from fastapi import Depends, FastAPI, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from dotenv import load_dotenv
 from ultralytics import YOLO
 from sqlalchemy.orm import Session
 
 APP_ROOT = Path(__file__).resolve().parent
+load_dotenv(APP_ROOT.parent / ".env")
 TEMPLATES = Jinja2Templates(directory=str(APP_ROOT / "templates"))
 
 MODEL_PATH = Path(os.getenv("MODEL_PATH", "checkpoints/best.pt"))
@@ -71,11 +73,14 @@ async def predict(
 ):
     if not image.content_type or not image.content_type.startswith("image/"):
         return TEMPLATES.TemplateResponse(
-            "index.html",
+            "remedy.html",
             {
                 "request": request,
                 "result": None,
                 "error": "Please upload a valid image file.",
+                "hospitals": None,
+                "primary_disease": None,
+                "feedback_saved": None,
             },
             status_code=400,
         )
@@ -138,11 +143,14 @@ async def predict(
             )
     except Exception as exc:
         return TEMPLATES.TemplateResponse(
-            "index.html",
+            "remedy.html",
             {
                 "request": request,
                 "result": None,
                 "error": f"Prediction failed: {exc}",
+                "hospitals": None,
+                "primary_disease": None,
+                "feedback_saved": None,
             },
             status_code=500,
         )
